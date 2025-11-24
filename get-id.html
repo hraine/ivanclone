@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Получить ID контакта</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .info-box {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .user-id-display {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .user-id-display .label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .user-id-display .id {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .button-secondary {
+            background: #764ba2;
+        }
+
+        .button-secondary:hover {
+            background: #63408a;
+        }
+
+        .steps {
+            margin: 30px 0;
+        }
+
+        .steps h2 {
+            color: #333;
+            margin: 20px 0 15px 0;
+            font-size: 18px;
+        }
+
+        .steps ol {
+            margin-left: 20px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .steps li {
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .qr-section p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Discord Clone</h1>
+
+        <div class="info-box">
+            <p>👋 Добро пожаловать в приватный голосовой мессенджер!</p>
+            <p>📱 Используйте <span class="highlight">ID ниже</span>, чтобы добавить себя в контакты другого пользователя.</p>
+        </div>
+
+        <div class="user-id-display">
+            <div class="label">Ваш уникальный ID:</div>
+            <div class="id" id="userId">Загрузка...</div>
+        </div>
+
+        <div class="button-group">
+            <button onclick="copyId()">📋 Скопировать ID</button>
+            <button class="button-secondary" onclick="generateNewId()">🔄 Новый ID</button>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✅ ID скопирован в буфер обмена!
+        </div>
+
+        <div class="steps">
+            <h2>📋 Как подключиться к контакту:</h2>
+            <ol>
+                <li>Откройте <a href="index.html" style="color: #667eea;">Discord Clone</a></li>
+                <li>Нажмите кнопку "+" в левой панели</li>
+                <li>Введите имя контакта и его ID (ID, которые вы получили здесь)</li>
+                <li>Нажмите "Добавить"</li>
+                <li>Начните писать сообщения или звоните!</li>
+            </ol>
+        </div>
+
+        <div class="info-box">
+            <h3 style="color: #333; margin-bottom: 10px;">💡 Советы:</h3>
+            <p>✅ Поделитесь вашим ID с собеседником</p>
+            <p>✅ Сохраните ID в безопасном месте</p>
+            <p>✅ Каждый пользователь имеет уникальный ID</p>
+            <p>✅ Все сообщения хранятся локально</p>
+        </div>
+
+        <div class="qr-section">
+            <p><strong>Или отправьте эту ссылку:</strong></p>
+            <div id="shareLink" style="font-family: monospace; word-break: break-all; color: #667eea; cursor: pointer;" onclick="copyShareLink()">
+                (загрузка...)
+            </div>
+            <p style="margin-top: 10px; font-size: 12px; color: #999;">Нажмите чтобы скопировать</p>
+        </div>
+
+        <div class="footer">
+            <p>🔒 Все данные хранятся локально • Никакой информации не отправляется на серверы</p>
+            <p style="margin-top: 10px;">
+                <a href="index.html">← Вернуться в чат</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserInfo();
+            generateShareLink();
+        });
+
+        function loadUserInfo() {
+            let userId = localStorage.getItem('discordClone_userId');
+            if (!userId) {
+                userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('discordClone_userId', userId);
+            }
+            document.getElementById('userId').textContent = userId;
+        }
+
+        function copyId() {
+            const userId = document.getElementById('userId').textContent;
+            navigator.clipboard.writeText(userId).then(() => {
+                showSuccessMessage();
+            }).catch(err => {
+                alert('Ошибка при копировании: ' + err);
+            });
+        }
+
+        function generateNewId() {
+            if (confirm('Вы уверены? Это сгенерирует новый ID и разорвет все существующие соединения.')) {
+                const newId = 'user_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('discordClone_userId', newId);
+                loadUserInfo();
+                generateShareLink();
+                alert('Новый ID сгенерирован!');
+            }
+        }
+
+        function generateShareLink() {
+            const userId = localStorage.getItem('discordClone_userId');
+            const link = `${window.location.origin}/?addContact=${userId}`;
+            document.getElementById('shareLink').textContent = link;
+        }
+
+        function copyShareLink() {
+            const link = document.getElementById('shareLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                showSuccessMessage('Ссылка скопирована!');
+            }).catch(err => {
+                alert('Ошибка при копировании: ' + err);
+            });
+        }
+
+        function showSuccessMessage(message = '✅ ID скопирован в буфер обмена!') {
+            const msg = document.getElementById('successMessage');
+            msg.textContent = message;
+            msg.classList.add('show');
+            setTimeout(() => {
+                msg.classList.remove('show');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
